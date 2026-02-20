@@ -1,8 +1,4 @@
-interface Movie {
-    title: string;
-    url?: string;
-    release_date: string;
-}
+import type { Movie } from "../models/Movie"
 
 interface Props {
     movie: Movie
