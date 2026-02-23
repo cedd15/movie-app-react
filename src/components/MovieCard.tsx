@@ -1,4 +1,5 @@
 import type { Movie } from "../models/Movie"
+import "../css/MovieCard.css"
 
 interface Props {
     movie: Movie

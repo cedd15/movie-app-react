@@ -1,6 +1,7 @@
 import { useState, type SubmitEvent } from "react"
 import MovieCard from "../components/MovieCard"
 import type { Movie } from "../models/Movie"
+import "../css/Home.css"
 
 function Home() {
     const [searchQuery, setSearchQuery] = useState("")
