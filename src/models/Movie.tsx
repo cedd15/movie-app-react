@@ -1,6 +1,6 @@
 export interface Movie {
     id?: number;
     title: string;
-    url?: string;
+    poster_path?: string;
     release_date: string;
 }

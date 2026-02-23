@@ -1,16 +1,30 @@
-import { useState, type SubmitEvent } from "react"
+import { useEffect, useState, type SubmitEvent } from "react"
 import MovieCard from "../components/MovieCard"
 import type { Movie } from "../models/Movie"
 import "../css/Home.css"
+import { searchMovies, getPopularMovies } from "../services/api"
 
 function Home() {
     const [searchQuery, setSearchQuery] = useState("")
+    const [movies, setMovies] = useState<Movie[]>([])
+    const [error, setError] = useState("")
+    const [loading, setLoading] = useState(true)
 
-    const movies : Movie[] = [
-        {id: 1, title: "John Wick", release_date: "2020"},
-        {id: 2, title: "Terminator", release_date: "1998"},
-        {id: 3, title: "The Matrix", release_date: "1999"}
-    ]
+    useEffect(() => {
+        const loadPopularMovies = async () => {
+            try {
+                const popularMovies = await getPopularMovies()
+                setMovies(popularMovies)
+            } catch (err) {
+                setError(`Error: ${err}`)
+            }
+            finally {
+                setLoading(false)
+            }
+        }
+        
+        loadPopularMovies()
+    }, [])
 
     const handleSearch = (e : SubmitEvent<HTMLFormElement>) => {
         e.preventDefault()
@@ -31,12 +45,24 @@ function Home() {
                 <button type="submit" className="search-btn">Search</button>
             </form>
 
-            <div className="movies-grid">
-                {
-                    movies.map(movie => 
-                        movie.title.toLowerCase().includes(searchQuery) && <MovieCard movie={movie} key={movie.id}/>)
-                }
-            </div>
+            {error && (
+                <div className="error-message">{error}</div>
+            )}
+
+            {
+                loading ? (
+                    <div className="loading">
+                        Loading...
+                    </div>
+                ) : (
+                    <div className="movies-grid">
+                        {
+                            movies.map(movie => 
+                                movie.title.toLowerCase().includes(searchQuery) && <MovieCard movie={movie} key={movie.id}/>)
+                        }
+                    </div>
+                )
+            }
         </div>
     )
 }
