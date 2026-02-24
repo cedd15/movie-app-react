@@ -26,9 +26,25 @@ function Home() {
         loadPopularMovies()
     }, [])
 
-    const handleSearch = (e : SubmitEvent<HTMLFormElement>) => {
+    const handleSearch = async (e : SubmitEvent<HTMLFormElement>) => {
         e.preventDefault()
-        alert(searchQuery)
+        
+        if (!searchQuery.trim()) return
+
+        if (loading) return
+
+        setLoading(true)
+
+        try {
+            const searchResults = await searchMovies(searchQuery)
+            setMovies(searchResults)
+            setError("")
+        } catch (err) {
+            setError("Failed to search movies...")
+        } finally {
+            setLoading(false)
+        }
+
         setSearchQuery("")
     }
 
