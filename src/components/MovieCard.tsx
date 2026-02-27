@@ -1,14 +1,24 @@
 import type { Movie } from "../models/Movie"
 import "../css/MovieCard.css"
-
+import { useMovieContext } from "../contexts/MovieContext"
+import type { MouseEvent } from "react"
 interface Props {
     movie: Movie
 }
 
 function MovieCard({movie} : Props) {
 
-    function onFavoriteClick() {
-        alert("clicked")
+    const {isFavorite, addToFavorites, removeFromFavorites} = useMovieContext()
+
+    const favorite = isFavorite(movie.id)
+
+    function onFavoriteClick(e : MouseEvent<HTMLButtonElement>) {
+        e.preventDefault()
+
+        if (favorite)
+            removeFromFavorites(movie.id)
+        else
+            addToFavorites(movie)
     }
 
     const baseImgUrl = "https://image.tmdb.org/t/p/w500"
@@ -18,7 +28,7 @@ function MovieCard({movie} : Props) {
             <div className="movie-poster">
                 <img src={`${baseImgUrl}${movie.poster_path}`} alt={movie.title} />
                 <div className="movie-overlay">
-                    <button className="favorite-btn" onClick={onFavoriteClick}>❤️</button>
+                    <button className={`favorite-btn ${favorite ? "active" : ""}`} onClick={onFavoriteClick}>❤️</button>
                 </div>
             </div>
             <div className="movie-info">
